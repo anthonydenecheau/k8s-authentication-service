@@ -1,0 +1,30 @@
+language: java
+cache:
+  directories:
+  - "$HOME/.m2"
+jdk:
+- oraclejdk8
+sudo: required
+services:
+- docker
+notifications:
+  slack:
+    secure: mw5cu8p+E+T3CflIjFscV4g8gFwvrLJ6CJd/bGvT728iEkHjKS9Y9z6u8JS/7TQ/kaaVtvKEh/ZTdDOqWGbz2vAipvIcZ7P4Fsau3d9uur6MoE349lOSVSHPeAF/2blme5Ce7w835WHTrvpNMgk3bQQorCLHOrMPyg1Qf0QFvJrilGD/Y9rR0MpRR4K5U62wxMmROqXi+fpGcf0hsnXbKyCS6p/QRT6+qvWwp/NESnlP4B6Laj3I+3p7Q90cqZbc6NZbRFpH2soDgP+v5WjUxa4CZlT3HkK5JwPpgoFItDriLj137WgxYMBUH0SzYDKbYRmIv4g1mt5NrLpac7xwOBiYRVdgYyVfCN6qiPSvy2jn7bYxF8x7X68kyX4/juc3GoEtYLN4t354YffwTFZdC4N/M484tRS+pqpE7wFsuE/a6zeIv+iLCXc6VpMv23et/CaBMDk02NdLHqOlZEt8oTowV1gCAHJ0W6EgrVbNkbC40B3zrl1IJTIBVBxHaym1XogzrDSXaCpdpur+Y4cWUhnoN+kLJB0T7tXJr9IfJE/CpVCub1lNRhOe4SuTqOVnN58CnuHmGkyBfZ0a0Dx71uyMNWFj+5cJTqoRE+i/XuLDCH3rQKr8VP4SsTaGVZoFCTjG+yhcfr+ELE2xwK5m1i+EG/VS0FAs3q2y4/bw1Cc=
+  email:
+  - anthony.denecheau@gmail.com
+  on_success: always
+  on_failure: always
+branches:
+  only:
+  - master
+env:
+  global:
+  - secure: pwfMLtxFNiWHoDWr3K59WvnZOrfZqtZOY6qhdYSWifXx81rIr2xLBnF2J8Ei1FS8xtFjbLZr5+OwYdXgCbVk5AvtOoMnRgcgmy/aTX4xsDT47o4vxNID1SDZXLgKZ51UhlUduHRlx8hCgAhIlqJki0D1jPPjkIX7vLYc42M4iB0/azbhyQrZ0qvrgLrulojaoh7kJNRarXRc5318NRANlRedkJiER/XJSsnVh+DBwTPIXjkyFCSGSKQ2BIDuK6YtLjvFIwE9Hm0eJdvmfwlI0MeiUNlt9DlcsQeC3BjefmelTtluZRDUF2/XXnJTAA64cQ2XJOuSoRmxAJilTgGKO1ld3dQu5E74ZV7vbvbYZVOJSmiukG2vk9Is7f+qeFjIMF0YG6ucEZfo+fEAEnO1KSgaXz/GuqHJgvSxxqwg07esWKNAvX3g0iW/wfxqy8GO12DSRPZ20wy/yFm27gtN8vqH/uKbtmON0zajtjV0c/nmSWf1nVzHTyK39/77VHc8BATTBucKSP93XnJx9GIT3/Iw30rI1TlWp6Q7g5lgFbWSOexy0D9HCHuYiMRxm2/ChCsvCZUa+GAarniOf8/EjAp7yvOej3+8qeHnQwqh/tsIQRE8Z1Z/TmX45qNH8HgDtQPsaiGYGXW54afOgEtV5bBW6H5hDcW5kZTKV6BIx3c=
+  - secure: hVXMK6hqavAIA5iwNIdQoRrRSucAz57YEYbBP43K7kgyENQ+4tupDhCWD6hKDBCnfDQsBoAaNA/FUyEnmaHg4rYZytLGJ4sPgbpPK742Htoqw8//kAu3t1/bJoByyGTq/pcVgLn/D9wIL0HpSnEeqdtpXEMZ91zU/aUH6xwZR09LvNez1HwW2LdYcJjFnfILJfYPp/kfYqlrjbBcsRRBVFTXBufg/ru72KrzrbuXy6Zt29W8MOEMP4Yx9OteaB1NvQ0bybLGe+mf0m36rJ8FUnvy2e1hfGkOU7EyoNQ42u+S2ab+6FvbCcvK7tkpyzv9EZ0LYJ4zp8mG7Dv/VdLvuXGyjSb9k29JSLh8gUtAvjnnPx2pqyNPIScUdIud64LsbKfmRQGVPEga1aD4EnCqev0EC8gJ80ZsMrr7ymDmpvgDbKMggTBIhizIWCC13/G0aBdsP/S9bCX/2II13PjzYTfUyqwP5CZZOF/whw8LctU8dBZi8C2AB6PCGIor22lLHjg8cDpHfov9FOsoj2x2uzvIEAXT8D+wFS+KGDk3nXqEdvWXygoWeHCxEfdYIfTG0MqHJgCpnM1t4p7/5o6R9jidNpO83JvdEibVVrsnOXtGziFJ2nxhobgXeKn98jARJgGygPfUiPwPUTBNtgfRIvwr0W7SAhr/e5e/RYrSM84=
+before_install:
+- gem install travis -v 1.8.5 --no-rdoc --no-ri
+- export BUILD_NAME=k8s-authenticationservice-$TRAVIS_BRANCH-$(date -u "+%Y%m%d%H%M%S")-$TRAVIS_BUILD_NUMBER
+script:
+- sh scripts/travis/tag_build.sh
+- sh scripts/travis/build_services.sh
+- sh scripts/travis/deploy_to_docker_hub.sh
