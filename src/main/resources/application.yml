@@ -1,7 +1,14 @@
 server:
   port: 8095
-  contextPath:   /auth
+  contextPath: /auth
 
+management:
+  endpoints:
+    web:
+      base-path: /manage
+  security:
+    enabled: false
+    
 signing:
   key: 345345fsdfsf5345
   
